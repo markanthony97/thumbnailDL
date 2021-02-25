@@ -42,7 +42,7 @@ def download(code,format,folder):
         urllib.request.urlretrieve(imLink, folder+code+".jpg")
     except:
         imLink=re.sub('i3','i',imLink,count=1)
-        urllib.request.urlretrieve(imLink, folder+code+".jpg")
+    urllib.request.urlretrieve(imLink, folder+code+".jpg")
     print("Saved",imLink,"at",folder+code+".jpg")
 
 
