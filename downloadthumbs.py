@@ -18,6 +18,7 @@ def main():
         outputF=args.output
 
     thumbCode=args.Link.split('/')[3]
+    regex_long = '(watch\?v\= *?)'
     LongMatch = re.search(regex_long, thumbCode)
 
     if LongMatch:
