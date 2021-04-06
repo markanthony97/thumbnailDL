@@ -6,9 +6,9 @@ from sys import platform
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('Link',metavar='Link')
-    parser.add_argument('-f','--format',default='hq')
-    parser.add_argument('-o','--output')
-
+    parser.add_argument('-f','--format',help="Download format (max or hq)")
+    parser.add_argument('-o','--output',help="Output Folder")
+    parser.add_argument('-n','--filename',help="Output filename")
     args = parser.parse_args()
     vid_code=args.Link
 
@@ -30,20 +30,36 @@ def main():
         thumbCode=re.findall('watch\?v\=(.*)',thumbCode)
         thumbCode=thumbCode[0]
 
-    download(thumbCode,args.format,outputF)
+    download(thumbCode,args.format,outputF,args.filename)
 
 
-def download(code,format,folder):
-    if format=="hq":
+def download(code,format,folder,filename):
+    if filename=="":
+        filename==code
+
+    if format=="max":
+        imLink="https://i3.ytimg.com/vi/"+code+"/maxresdefault.jpg"
+    elif format=="hq":
         imLink="https://i3.ytimg.com/vi/"+code+"/hqdefault.jpg"
     else:
-        imLink="https://i3.ytimg.com/vi/"+code+"/maxresdefault.jpg"
+        imLink1="https://i3.ytimg.com/vi/"+code+"/maxresdefault.jpg"
+        imLink2="https://i3.ytimg.com/vi/"+code+"/hqdefault.jpg"
     try:
-        urllib.request.urlretrieve(imLink, folder+code+".jpg")
+        if format!="hq" or format!="max":
+            urllib.request.urlretrieve(imLink1, folder+filename+"_max.jpg")
+            urllib.request.urlretrieve(imLink2, folder+filename+"_hq.jpg")
+        else:
+            urllib.request.urlretrieve(imLink, folder+filename+".jpg")
     except:
         imLink=re.sub('i3','i',imLink,count=1)
-    urllib.request.urlretrieve(imLink, folder+code+".jpg")
-    print("Saved",imLink,"at",folder+code+".jpg")
+        if format!="hq" and format!="max":
+            urllib.request.urlretrieve(imLink1, folder+filename+"_max.jpg")
+            urllib.request.urlretrieve(imLink2, folder+filename+"_hq.jpg")
+            print("Saved",imLink1,"and",imLink2,"at",folder)
+        else:
+            urllib.request.urlretrieve(imLink, folder+filename+".jpg")
+            print("Saved",imLink,"at",folder+filename+".jpg")
+
 
 
 if __name__ == "__main__":
